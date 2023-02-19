@@ -41,9 +41,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -101,7 +99,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 									boolean first = true;
 									for (NourishEffect eff: nourishEffects) {
 										if (!first) {
-											lines.add(new LiteralText(""));
+											lines.add(Text.literal(""));
 										}
 										first = false;
 										addCause(lines, eff);
@@ -127,7 +125,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 			if (eff.test(comp)) {
 				if (eff.attributes.size() > 0) {
 					if (!first) {
-						list.add(new LiteralText(""));
+						list.add(Text.literal(""));
 					}
 					first = false;
 					addCause(list, eff);
@@ -145,12 +143,12 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 					} else {
 						v *= 100.0D;
 					}
-					Text text = new TranslatableText(attribute.getTranslationKey());
+					Text text = Text.translatable(attribute.getTranslationKey());
 					if (v > 0) {
-						list.add(new TranslatableText("attribute.modifier.plus." + modifier.getOperation().getId(),
+						list.add(Text.translatable("attribute.modifier.plus." + modifier.getOperation().getId(),
 							ItemStack.MODIFIER_FORMAT.format(v), text).formatted(Formatting.BLUE));
 					} else {
-						list.add(new TranslatableText("attribute.modifier.take." + modifier.getOperation().getId(),
+						list.add(Text.translatable("attribute.modifier.take." + modifier.getOperation().getId(),
 							ItemStack.MODIFIER_FORMAT.format(-v), text).formatted(Formatting.RED));
 					}
 				}
@@ -161,26 +159,26 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
 	@Unique
 	private void addCause(List<Text> lines, NourishEffect eff) {
-		lines.add(new TranslatableText("nourish.effect.caused"));
+		lines.add(Text.translatable("nourish.effect.caused"));
 		for (NourishEffectCondition condition: eff.conditions) {
 			List<String> groups = Lists.newArrayList();
 			for (NourishGroup group: condition.groups) {
-				groups.add(new TranslatableText("nourish.group." + group.name).getString());
+				groups.add(Text.translatable("nourish.group." + group.name).getString());
 			}
-			Text text = new LiteralText(String.join(", ", groups));
+			Text text = Text.literal(String.join(", ", groups));
 			String root = "nourish.effect.cause.multiple";
 			if (groups.size() == 1) {
 				root = "nourish.effect.cause.single";
 			}
 			if (condition.above != -1.0F) {
 				if (condition.below != 2.0F) {
-					lines.add(new TranslatableText(root + ".above_and_below", text,
+					lines.add(Text.translatable(root + ".above_and_below", text,
 						(int) (condition.above * 100), (int) (condition.below * 100)));
 				} else {
-					lines.add(new TranslatableText(root + ".above", text, (int) (condition.above * 100)));
+					lines.add(Text.translatable(root + ".above", text, (int) (condition.above * 100)));
 				}
 			} else {
-				lines.add(new TranslatableText(root + ".below", text, (int) (condition.below * 100)));
+				lines.add(Text.translatable(root + ".below", text, (int) (condition.below * 100)));
 			}
 		}
 	}

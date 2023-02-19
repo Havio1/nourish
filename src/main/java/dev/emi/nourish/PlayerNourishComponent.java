@@ -27,7 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
@@ -87,8 +87,7 @@ public class PlayerNourishComponent implements NourishComponent, CopyableCompone
 			}
 		} else {
 			for (NourishGroup group: profile.groups) {
-				Tag<Item> tag = player.world.getTagManager().getTag(Registry.ITEM_KEY, group.identifier, (identifier -> new RuntimeException(identifier.toString())));
-				if (tag.contains(stack.getItem())) {
+				if (stack.isIn(TagKey.of(Registry.ITEM_KEY, group.identifier))) {
 					FoodComponent comp = stack.getItem().getFoodComponent();
 					consume(group, comp.getHunger() + comp.getSaturationModifier());
 				}

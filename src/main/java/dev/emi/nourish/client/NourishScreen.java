@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 public class NourishScreen extends Screen {
@@ -26,7 +25,7 @@ public class NourishScreen extends Screen {
 	private int y;	
 
 	public NourishScreen() {
-		super(new TranslatableText("nourish.gui.nourishment"));
+		super(Text.translatable("nourish.gui.nourishment"));
 	}
 
 	public NourishScreen(boolean returnToInv) {
@@ -43,7 +42,7 @@ public class NourishScreen extends Screen {
 	public void init() {
 		List<NourishGroup> groups = NourishHolder.NOURISH.get(client.player).getProfile().groups;
 		for (NourishGroup group: groups) {
-			int l = this.textRenderer.getWidth(new TranslatableText("nourish.group." + group.identifier.getPath()).getString());
+			int l = this.textRenderer.getWidth(Text.translatable("nourish.group." + group.identifier.getPath()).getString());
 			if (l > maxNameLength) {
 				maxNameLength = l;
 			}
@@ -75,13 +74,13 @@ public class NourishScreen extends Screen {
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
 			if (group.secondary && !secondary) {
 				secondary = true;
-				TranslatableText t = new TranslatableText("nourish.gui.secondary");
+				Text t = Text.translatable("nourish.gui.secondary");
 				int sw = this.textRenderer.getWidth(t.getString());
 				this.textRenderer.draw(matrices, t.getString(), x + w / 2 - sw / 2, y + yo + 4, 4210752);
 				yo += 20;
 			}
 			int color = group.getColor() | 0xFF000000;
-			this.textRenderer.draw(matrices, new TranslatableText("nourish.group." + group.identifier.getPath()).getString(), x + 10, y + yo + 4, 4210752);
+			this.textRenderer.draw(matrices, Text.translatable("nourish.group." + group.identifier.getPath()).getString(), x + 10, y + yo + 4, 4210752);
 			NourishComponent comp = NourishHolder.NOURISH.get(client.player);
 			RenderSystem.setShaderTexture(0, GUI_TEX);
 			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 2, 0, 8, 90, 12);
@@ -89,7 +88,7 @@ public class NourishScreen extends Screen {
 			if (mouseX > x + maxNameLength + 20 && mouseY > y + yo + 2 && mouseX < x + maxNameLength + 108 && mouseY < y + yo + 13) {
 				if (group.description) {
 					List<Text> lines = Lists.newArrayList();
-					lines.add(new TranslatableText("nourish.group.description." + group.identifier.getPath()));
+					lines.add(Text.translatable("nourish.group.description." + group.identifier.getPath()));
 					this.renderTooltip(matrices, lines, mouseX, mouseY);
 				}
 			}
@@ -101,7 +100,7 @@ public class NourishScreen extends Screen {
 	}
 
 	public boolean keyPressed(int int_1, int int_2, int int_3) {
-		if (client.options.keyInventory.matchesKey(int_1, int_2)) {
+		if (client.options.inventoryKey.matchesKey(int_1, int_2)) {
 			if (returnToInv) {
 				client.setScreen(new InventoryScreen(client.player));
 			} else {
@@ -118,7 +117,7 @@ public class NourishScreen extends Screen {
 			client.setScreen(new InventoryScreen(client.player));
 			return;
 		}
-		super.onClose();
+		super.shouldCloseOnEsc();
 	}
 
 	public boolean isPauseScreen() {

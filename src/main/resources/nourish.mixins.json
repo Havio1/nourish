@@ -1,7 +1,7 @@
 {
 	"required": true,
 	"package": "dev.emi.nourish.mixin",
-	"compatibilityLevel": "JAVA_8",
+	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"PlayerEntityMixin",
 		"StatusEffectInstanceMixin",

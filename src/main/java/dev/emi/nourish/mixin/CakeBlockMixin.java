@@ -17,7 +17,7 @@ import net.minecraft.block.CakeBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
@@ -33,8 +33,9 @@ public abstract class CakeBlockMixin extends Block {
 	private static void tryEat(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player, CallbackInfoReturnable<ActionResult> info) {
 		if (info.getReturnValue() == ActionResult.SUCCESS) {
 			for (NourishGroup group: NourishHolder.NOURISH.get(player).getProfile().groups) {
-				Tag<Item> tag = player.world.getTagManager().getTag(Registry.ITEM_KEY, group.identifier, identifier -> new RuntimeException("Could not find item tag for " + group.identifier));
-				if (tag.contains(state.getBlock().asItem())) {
+				Block block = state.getBlock();
+				ItemStack stack = block.getPickStack(world,pos,state);
+				if (stack.isIn(TagKey.of(Registry.ITEM_KEY, group.identifier))) {
 					NourishHolder.NOURISH.get(player).consume(group, 2 + 0.1F);
 					NourishHolder.NOURISH.sync(player);
 				}
