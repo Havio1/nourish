@@ -12,13 +12,10 @@ group = project.maven_group
 
 repositories {
 	maven {
-		name = "Jitpack"
-		url = "https://jitpack.io"
-	}
-	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
 	}
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
