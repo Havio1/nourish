@@ -19,6 +19,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.mojang.brigadier.arguments.FloatArgumentType.floatArg;
 import static com.mojang.brigadier.arguments.StringArgumentType.word;
@@ -28,7 +30,11 @@ import static net.minecraft.server.command.CommandManager.literal;
 import java.util.List;
 
 public class NourishMain implements ModInitializer {
+	public static final String MOD_ID = "nourish";
 	public static boolean debugTooltip = false;
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 
 	private final static SuggestionProvider<ServerCommandSource> NUTRIENT_SUGGESTIONS = (context, builder) -> {
 		List<String> nutrients = Lists.newArrayList();
@@ -47,7 +53,7 @@ public class NourishMain implements ModInitializer {
 		PlayerSyncCallback.EVENT.register(PlayerNourishComponent::new);
 		NourishProfiles.init();
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, registrationEnvironment) -> {
-			dispatcher.register(literal("nourish")
+			dispatcher.register(literal(MOD_ID)
 				.requires(source -> source.hasPermissionLevel(2))
 				.then(
 					literal("get")

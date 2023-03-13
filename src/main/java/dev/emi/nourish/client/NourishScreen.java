@@ -1,12 +1,14 @@
 package dev.emi.nourish.client;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.common.collect.Lists;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.nourish.NourishComponent;
 import dev.emi.nourish.NourishHolder;
+import dev.emi.nourish.NourishMain;
 import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
@@ -19,8 +21,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import static dev.emi.nourish.NourishMain.MOD_ID;
+
 public class NourishScreen extends Screen {
-	private static final Identifier GUI_TEX = new Identifier("nourish", "textures/gui/gui.png");
+	private static final Identifier GUI_TEX = new Identifier(MOD_ID, "textures/gui/gui.png");
+	private static final Identifier NOURHSIMENT_METER_TEX = new Identifier(MOD_ID, "textures/gui/gui_nourishment_meter_filled.png");
+	private final int NOURISHMENT_METER_FILL_WIDTH = 89;
 	private boolean returnToInv;
 	private int maxNameLength = 0;
 	private int w;
@@ -105,28 +111,38 @@ public class NourishScreen extends Screen {
 				yo += 20;
 			}
 			int color = group.getColor() | 0xFF000000;
-			this.textRenderer.draw(matrices, Text.translatable("nourish.group." + group.identifier.getPath()).getString(), x + 10, y + yo + 4, 4210752);
+			this.textRenderer.draw(matrices, Text.translatable("nourish.group." + group.identifier.getPath()).getString(), x + 10, y + yo + 9, 4210752);
 			NourishComponent comp = NourishHolder.NOURISH.get(client.player);
 			RenderSystem.setShaderTexture(0, GUI_TEX);
 
 			//draw empty progress bar texture
-			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 2, 0, 8, 91, 11);
+			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 8, 0, 8, 91, 11);
 
 			//draw fill progress bar
 			// old: DrawableHelper.fill(matrices, x + maxNameLength + 20, y + yo + 2, x + maxNameLength + 21 + Math.round(88 * comp.getValue(group)), y + yo + 13, color);
 
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 6, color);
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 7, color);
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 8, color);
+			/* temp:
+			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 12, color);
+			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 13, color);
+			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 14, color);
+			 */
 
-			if (mouseX > x + maxNameLength + 20 && mouseY > y + yo + 2 && mouseX < x + maxNameLength + 108 && mouseY < y + yo + 13) {
+			RenderSystem.setShaderTexture(0, NOURHSIMENT_METER_TEX);
+			RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
+
+			this.drawTexture(matrices,x + maxNameLength + 21,y + yo + 12,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 3);
+
+			//NourishMain.LOGGER.debug(String.valueOf(0 + Math.round((NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group)) + 0.19f));
+
+			RenderSystem.setShaderTexture(0, GUI_TEX);
+			RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
+			if (mouseX > x + maxNameLength + 21 && mouseY > y + yo + 8 && mouseX < x + maxNameLength + 108 && mouseY < y + yo + 21) {
 				if (group.description) {
 					List<Text> lines = Lists.newArrayList();
 					lines.add(Text.translatable("nourish.group.description." + group.identifier.getPath()));
 					this.renderTooltip(matrices, lines, mouseX, mouseY);
 				}
 			}
-
 			yo += 20;
 		}
 		this.addDrawableChild(exitWidget);
