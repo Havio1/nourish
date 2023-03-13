@@ -1,21 +1,18 @@
 package dev.emi.nourish.client;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.common.collect.Lists;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.nourish.NourishComponent;
 import dev.emi.nourish.NourishHolder;
-import dev.emi.nourish.NourishMain;
 import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -25,7 +22,7 @@ import static dev.emi.nourish.NourishMain.MOD_ID;
 
 public class NourishScreen extends Screen {
 	private static final Identifier GUI_TEX = new Identifier(MOD_ID, "textures/gui/gui.png");
-	private static final Identifier NOURHSIMENT_METER_TEX = new Identifier(MOD_ID, "textures/gui/gui_nourishment_meter_filled.png");
+	private static final Identifier NOURISHMENT_METER_TEX = new Identifier(MOD_ID, "textures/gui/gui_nourishment_meter_filled.png");
 	private final int NOURISHMENT_METER_FILL_WIDTH = 91;
 	private boolean returnToInv;
 	private int maxNameLength = 0;
@@ -116,7 +113,7 @@ public class NourishScreen extends Screen {
 
 			//changes shader, allowing for alpha-transparency and switches to meter texture
 			RenderSystem.enableBlend();
-			RenderSystem.setShaderTexture(0, NOURHSIMENT_METER_TEX);
+			RenderSystem.setShaderTexture(0, NOURISHMENT_METER_TEX);
 
 			//draws uncolored meter texture
 			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
