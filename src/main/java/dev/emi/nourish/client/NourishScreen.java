@@ -84,7 +84,7 @@ public class NourishScreen extends Screen {
 		this.renderBackground(matrices);
 
 		RenderSystem.setShaderTexture(0, GUI_TEX);
-		//filled background
+		//draws filled background
 		DrawableHelper.drawTexture(matrices, x + 4, y + 4, 4 * w, 3 * h, w - 4, h - 4, 256 * w, 256 * h);
 
 		DrawableHelper.drawTexture(matrices, x + 4, y, 4 * w, 0, w - 4, 4, 256 * w, 256);
@@ -97,10 +97,6 @@ public class NourishScreen extends Screen {
 		this.drawTexture(matrices, x + w, y + h, 4, 4, 4, 4);
 		int yo = 28;
 		boolean secondary = false;
-
-
-
-
 
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
 			if (group.secondary && !secondary) {
@@ -118,25 +114,23 @@ public class NourishScreen extends Screen {
 			//draw empty progress bar texture
 			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 8, 0, 8, 91, 11);
 
-			//draw fill progress bar
-			// old: DrawableHelper.fill(matrices, x + maxNameLength + 20, y + yo + 2, x + maxNameLength + 21 + Math.round(88 * comp.getValue(group)), y + yo + 13, color);
-
-			/* temp:
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 12, color);
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 13, color);
-			this.drawHorizontalLine(matrices,x + maxNameLength + 21,x + maxNameLength + 20 + Math.round(88 * comp.getValue(group)+1),y + yo + 14, color);
-			 */
-
+			//changes shader, allowing for alpha-transparency and switches to meter texture
+			RenderSystem.enableBlend();
 			RenderSystem.setShaderTexture(0, NOURHSIMENT_METER_TEX);
-			RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
 
+			//draws uncolored meter texture
 			this.drawTexture(matrices,x + maxNameLength + 21,y + yo + 12,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 3);
 
-			//NourishMain.LOGGER.debug(String.valueOf(0 + Math.round((NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group)) + 0.19f));
+			//sets color and draws colored meter texture
+			RenderSystem.setShaderColor(255,0,255,0.45f);
+			this.drawTexture(matrices,x + maxNameLength + 21,y + yo + 12,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 3);
 
+			//revert changes to shader
+			RenderSystem.disableBlend();
 			RenderSystem.setShaderTexture(0, GUI_TEX);
 			RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
-			if (mouseX > x + maxNameLength + 21 && mouseY > y + yo + 8 && mouseX < x + maxNameLength + 108 && mouseY < y + yo + 21) {
+
+			if (mouseX > x + maxNameLength + 18 && mouseY > y + yo + 8 && mouseX < x + maxNameLength + 111 && mouseY < y + yo + 21) {
 				if (group.description) {
 					List<Text> lines = Lists.newArrayList();
 					lines.add(Text.translatable("nourish.group.description." + group.identifier.getPath()));
