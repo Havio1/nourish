@@ -72,7 +72,7 @@ public class NourishScreen extends Screen {
 		x = (width - w) / 2 - 2;
 		y = (height - h) / 2 - 2;
 
-		exitWidget = new TexturedButtonWidget(x + 171, y + 10,16, 16, 64, 32, 16, GUI_TEX, (widget) -> {
+		exitWidget = new TexturedButtonWidget(x + 171, y + 12,16, 16, 64, 32, 16, GUI_TEX, (widget) -> {
 			MinecraftClient.getInstance().setScreen(new InventoryScreen(client.player));
 		});
 	}
