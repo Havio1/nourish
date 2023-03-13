@@ -24,7 +24,7 @@ public class NourishGroups {
 				} else {
 					groups.add(g);
 				}
-				if (g.name.toLowerCase().equals("dairy")) {// Is this activism?
+				if (g.name.equalsIgnoreCase("dairy")) {// Is this activism?
 					System.out.println("[nourish] Dairy is a fake food group. It still was added but it's fake and you should consider not using it");
 				}
 			} catch (Exception e) {

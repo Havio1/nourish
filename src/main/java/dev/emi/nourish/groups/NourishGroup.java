@@ -5,7 +5,8 @@ import net.minecraft.util.Identifier;
 public class NourishGroup {
 	public transient Identifier identifier;
 	public String name;
-	public String color;
+
+	public int[] color;
 	public float default_value = 0.8f;
 	public float decay = 0.2f;
 	public float multiplier = 1f;
@@ -28,8 +29,7 @@ public class NourishGroup {
 		return multiplier;
 	}
 
-	public int getColor() {
-		int i = Integer.parseInt(color, 16);
-		return i % 0x1000000;
+	public int[] getColor() {
+		return color;
 	}
 }

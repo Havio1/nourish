@@ -9,6 +9,7 @@ import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import dev.emi.nourish.NourishHolder;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -51,8 +52,6 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 	private static final Identifier GUI_TEX = new Identifier("nourish", "textures/gui/gui.png");
 	private TexturedButtonWidget nourishWidget;
 
-	private static final Text nourishmentTooltipText = Text.translatable("nourish.gui.nourishment");
-
 	@Shadow @Final
 	private RecipeBookWidget recipeBook;
 
@@ -66,7 +65,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
 	@Inject(at = @At("TAIL"), method = "init")
 	public void init(CallbackInfo info) {
-		nourishWidget = new TexturedButtonWidget(this.x + this.backgroundWidth - 9 - 9, this.y + 5, 13, 13, 0, 18, 13, GUI_TEX, (widget) -> {
+		nourishWidget = new TexturedButtonWidget(this.x + this.backgroundWidth - 9 - 35, this.y + 61, 20, 18, 0, 19, 18, GUI_TEX, (widget) -> {
 			MinecraftClient.getInstance().setScreen(new NourishScreen(true));
 		});
 		this.addDrawableChild(nourishWidget);
@@ -119,9 +118,6 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 					this.renderTooltip(matrices, getAttributesTooltip(), mouseX, mouseY);
 				}
 			}
-		}
-		if (nourishWidget.isHovered()) {
-			this.renderTooltip(matrices, nourishmentTooltipText, mouseX, mouseY);
 		}
 	}
 
@@ -194,6 +190,10 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 
 	@Inject(at = @At("TAIL"), method = "handledScreenTick")
 	public void tick(CallbackInfo info) {
-		nourishWidget.setPos(this.x + this.backgroundWidth - 9 - 9, this.y + 5);// :tiny_potato:
+		if (this.client.interactionManager.hasCreativeInventory()) {
+			this.client.setScreen(new CreativeInventoryScreen(this.client.player));
+		} else {
+			nourishWidget.setPos(this.x + this.backgroundWidth - 9 - 35, this.y + 61);// :tiny_potato:
+		}
 	}
 }

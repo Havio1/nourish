@@ -1,5 +1,6 @@
 package dev.emi.nourish.client;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -7,12 +8,14 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.nourish.NourishComponent;
 import dev.emi.nourish.NourishHolder;
+import dev.emi.nourish.NourishMain;
 import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -31,7 +34,8 @@ public class NourishScreen extends Screen {
 	private int x;
 	private int y;
 
-	private static  final  Text exitWidgetTooltipText = Text.translatable("nourish.gui.close_nourishment_screen");
+	int[] rgbValues;
+	float alphaValue;
 
 	private TexturedButtonWidget exitWidget;
 
@@ -84,10 +88,15 @@ public class NourishScreen extends Screen {
 		//draws filled background
 		DrawableHelper.drawTexture(matrices, x + 4, y + 4, 4 * w, 3 * h, w - 4, h - 4, 256 * w, 256 * h);
 
+		//top border
 		DrawableHelper.drawTexture(matrices, x + 4, y, 4 * w, 0, w - 4, 4, 256 * w, 256);
+		//bottom border
 		DrawableHelper.drawTexture(matrices, x + 4, y + h, 3 * w, 4, w - 4, 4, 256 * w, 256);
+		//left border
 		DrawableHelper.drawTexture(matrices, x, y + 4, 0, 4 * h, 4, h - 4, 256, 256 * h);
+		//right border
 		DrawableHelper.drawTexture(matrices, x + w, y + 4, 4, 3 * h, 4, h - 4, 256, 256 * h);
+
 		this.drawTexture(matrices, x, y, 0, 0, 4, 4);
 		this.drawTexture(matrices, x + w, y, 4, 0, 4, 4);
 		this.drawTexture(matrices, x, y + h, 0, 4, 4, 4);
@@ -96,14 +105,15 @@ public class NourishScreen extends Screen {
 		boolean secondary = false;
 
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
+			rgbValues = group.getColor();
+			alphaValue = 0.45f;
 			if (group.secondary && !secondary) {
 				secondary = true;
 				Text t = Text.translatable("nourish.gui.secondary");
 				int sw = this.textRenderer.getWidth(t.getString());
-				this.textRenderer.draw(matrices, t.getString(), x + w / 2 - sw / 2, y + yo + 4, 4210752);
+				this.textRenderer.draw(matrices, t.getString(), x + w / 2 - sw / 2, y + yo + 9, 4210752);
 				yo += 20;
 			}
-			int color = group.getColor() | 0xFF000000;
 			this.textRenderer.draw(matrices, Text.translatable("nourish.group." + group.identifier.getPath()).getString(), x + 10, y + yo + 9, 4210752);
 			NourishComponent comp = NourishHolder.NOURISH.get(client.player);
 			RenderSystem.setShaderTexture(0, GUI_TEX);
@@ -112,14 +122,18 @@ public class NourishScreen extends Screen {
 			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 8, 0, 8, 91, 11);
 
 			//changes shader, allowing for alpha-transparency and switches to meter texture
+			//RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderTexture(0, NOURISHMENT_METER_TEX);
 
 			//draws uncolored meter texture
 			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
+			//for debugging rgbValues' values:
+			//System.out.println(Arrays.toString(rgbValues) + " " + group.name + " from NourishScreen.java");
+
 			//sets color and draws colored meter texture
-			RenderSystem.setShaderColor(255,0,255,0.45f);
+			RenderSystem.setShaderColor(rgbValues[0],rgbValues[1],rgbValues[2],alphaValue);
 			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
 			//revert changes to shader
@@ -127,7 +141,7 @@ public class NourishScreen extends Screen {
 			RenderSystem.setShaderTexture(0, GUI_TEX);
 			RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
 
-			if (mouseX > x + maxNameLength + 18 && mouseY > y + yo + 8 && mouseX < x + maxNameLength + 111 && mouseY < y + yo + 21) {
+			if (mouseX > x + maxNameLength + 18 && mouseY > y + yo + 8 && mouseX < x + maxNameLength + 112 && mouseY < y + yo + 21) {
 				if (group.description) {
 					List<Text> lines = Lists.newArrayList();
 					lines.add(Text.translatable("nourish.group.description." + group.identifier.getPath()));
@@ -139,9 +153,6 @@ public class NourishScreen extends Screen {
 		this.addDrawableChild(exitWidget);
 		int tw = this.textRenderer.getWidth(this.title.getString());
 		this.textRenderer.draw(matrices, this.title.getString(), (width - tw) / 2, y + 15.0F, 4210752);
-		if (exitWidget.isHovered()) {
-			this.renderTooltip(matrices, exitWidgetTooltipText, mouseX, mouseY);
-		}
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 
