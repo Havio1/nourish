@@ -26,7 +26,7 @@ import static dev.emi.nourish.NourishMain.MOD_ID;
 public class NourishScreen extends Screen {
 	private static final Identifier GUI_TEX = new Identifier(MOD_ID, "textures/gui/gui.png");
 	private static final Identifier NOURHSIMENT_METER_TEX = new Identifier(MOD_ID, "textures/gui/gui_nourishment_meter_filled.png");
-	private final int NOURISHMENT_METER_FILL_WIDTH = 89;
+	private final int NOURISHMENT_METER_FILL_WIDTH = 91;
 	private boolean returnToInv;
 	private int maxNameLength = 0;
 	private int w;
@@ -119,11 +119,11 @@ public class NourishScreen extends Screen {
 			RenderSystem.setShaderTexture(0, NOURHSIMENT_METER_TEX);
 
 			//draws uncolored meter texture
-			this.drawTexture(matrices,x + maxNameLength + 21,y + yo + 12,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 3);
+			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
 			//sets color and draws colored meter texture
 			RenderSystem.setShaderColor(255,0,255,0.45f);
-			this.drawTexture(matrices,x + maxNameLength + 21,y + yo + 12,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 3);
+			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
 			//revert changes to shader
 			RenderSystem.disableBlend();
