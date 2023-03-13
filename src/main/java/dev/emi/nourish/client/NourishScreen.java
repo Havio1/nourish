@@ -72,7 +72,7 @@ public class NourishScreen extends Screen {
 		x = (width - w) / 2 - 2;
 		y = (height - h) / 2 - 2;
 
-		exitWidget = new TexturedButtonWidget(x + 10, y + 10,16, 15, 30, 48, 15, GUI_TEX, (widget) -> {
+		exitWidget = new TexturedButtonWidget(x + 171, y + 10,16, 16, 64, 32, 16, GUI_TEX, (widget) -> {
 			MinecraftClient.getInstance().setScreen(new InventoryScreen(client.player));
 		});
 	}
@@ -141,7 +141,7 @@ public class NourishScreen extends Screen {
 		}
 		this.addDrawableChild(exitWidget);
 		int tw = this.textRenderer.getWidth(this.title.getString());
-		this.textRenderer.draw(matrices, this.title.getString(), (width - tw) / 2, y + 10.0F, 4210752);
+		this.textRenderer.draw(matrices, this.title.getString(), (width - tw) / 2, y + 15.0F, 4210752);
 		if (exitWidget.isHovered()) {
 			this.renderTooltip(matrices, exitWidgetTooltipText, mouseX, mouseY);
 		}
