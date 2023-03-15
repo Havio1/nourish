@@ -106,7 +106,7 @@ public class NourishScreen extends Screen {
 
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
 			rgbValues = group.getColor();
-			alphaValue = 0.45f;
+			alphaValue = 1.0f;
 			if (group.secondary && !secondary) {
 				secondary = true;
 				Text t = Text.translatable("nourish.gui.secondary");
@@ -133,7 +133,7 @@ public class NourishScreen extends Screen {
 			//System.out.println(Arrays.toString(rgbValues) + " " + group.name + " from NourishScreen.java");
 
 			//sets color and draws colored meter texture
-			RenderSystem.setShaderColor(rgbValues[0],rgbValues[1],rgbValues[2],alphaValue);
+			RenderSystem.setShaderColor(rgbValues[0] / 255f,rgbValues[1] / 255f,rgbValues[2] / 255f,alphaValue);
 			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
 			//revert changes to shader
