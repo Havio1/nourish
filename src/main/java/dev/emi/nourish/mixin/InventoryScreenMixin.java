@@ -1,26 +1,10 @@
 package dev.emi.nourish.mixin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import dev.emi.nourish.NourishHolder;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import org.apache.commons.lang3.tuple.Pair;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import dev.emi.nourish.NourishComponent;
-import dev.emi.nourish.NourishMain;
+import dev.emi.nourish.NourishHolder;
 import dev.emi.nourish.PlayerNourishComponent;
 import dev.emi.nourish.client.NourishScreen;
 import dev.emi.nourish.effects.NourishEffect;
@@ -31,7 +15,6 @@ import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,14 +24,27 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import org.apache.commons.lang3.tuple.Pair;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Mixin(InventoryScreen.class)
-public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> implements RecipeBookProvider {
+public abstract class InventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler>{
 	private static final Identifier GUI_TEX = new Identifier("nourish", "textures/gui/gui.png");
 	private TexturedButtonWidget nourishWidget;
 
@@ -93,7 +89,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 								for (NourishEffect eff: comp.getProfile().effects) {
 									if (eff.test(comp)) {
 										for (Pair<Identifier, Integer> status : eff.status_effects) {
-											if (Registry.STATUS_EFFECT.get(status.getLeft()) == effect.getEffectType() && status.getRight() == effect.getAmplifier()) {
+											if (Registries.STATUS_EFFECT.get(status.getLeft()) == effect.getEffectType() && status.getRight() == effect.getAmplifier()) {
 												nourishEffects.add(eff);
 											}
 										}
@@ -136,7 +132,7 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 					addCause(list, eff);
 				}
 				for (NourishAttribute attr : eff.attributes) {
-					EntityAttribute attribute = Registry.ATTRIBUTE.get(attr.id);
+					EntityAttribute attribute = Registries.ATTRIBUTE.get(attr.id);
 					EntityAttributeModifier modifier = new EntityAttributeModifier(PlayerNourishComponent.ATTRIBUTE_UUID,
 						"nourish", attr.amount, attr.operation);
 					double v = modifier.getValue();
@@ -191,9 +187,9 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
 	@Inject(at = @At("TAIL"), method = "handledScreenTick")
 	public void tick(CallbackInfo info) {
 		if (this.client.interactionManager.hasCreativeInventory()) {
-			this.client.setScreen(new CreativeInventoryScreen(this.client.player));
+			//this.client.setScreen(new CreativeInventoryScreen(this.client.player);
 		} else {
-			nourishWidget.setPos(this.x + this.backgroundWidth - 9 - 35, this.y + 61);// :tiny_potato:
+			nourishWidget.setPosition(this.x + this.backgroundWidth - 9 - 35, this.y + 61);// :tiny_potato:
 		}
 	}
 }

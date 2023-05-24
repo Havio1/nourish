@@ -13,13 +13,13 @@
 	"nourish.effect.cause.single.above": "%d above %d%%",
 	"nourish.effect.cause.single.below": "%d below %d%%",
 	"nourish.effect.cause.single.above_and_below": "%d above %d%% and below %d%%",
-	"nourish.group.fruit": "Fruit",
+	"nourish.group.fruits": "Fruit",
 	"nourish.group.vegetables": "Vegetables",
-	"nourish.group.carbohydrates": "Carbohydrates",
-	"nourish.group.protein": "Protein",
+	"nourish.group.grains": "Grains",
+	"nourish.group.proteins": "Protein",
 	"nourish.group.fats": "Fats",
-	"nourish.group.sweets": "Sweets",
-	"nourish.group.description.sweets": "Too many sweets are bad for you!",
+	"nourish.group.sugars": "Sugars",
+	"nourish.group.description.sugars": "Too much sugar is bad for you!",
 
 	"nourish.gui.close_nourishment_screen": "Return to Inventory"
 }

@@ -1,16 +1,6 @@
 package dev.emi.nourish.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.emi.nourish.NourishHolder;
-import net.minecraft.tag.TagKey;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import dev.emi.nourish.NourishMain;
 import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.client.MinecraftClient;
@@ -19,11 +9,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -37,7 +36,7 @@ public abstract class ItemStackMixin {
 		}
 		if (player == null) return;
 		ItemStack stack = (ItemStack) (Object) this;
-		Identifier id = Registry.ITEM.getId(stack.getItem());
+		Identifier id = Registries.ITEM.getId(stack.getItem());
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		List<String> groups = new ArrayList<String>();
 		if (id.toString().equals("sandwichable:sandwich")) {
@@ -50,7 +49,7 @@ public abstract class ItemStackMixin {
 		MinecraftClient client = MinecraftClient.getInstance();
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
 			for (ItemStack food: items) {
-				if (food.isIn(TagKey.of(Registry.ITEM_KEY, group.identifier))) {
+				if (food.isIn(TagKey.of(Registries.ITEM.getKey(), group.identifier))) {
 					groups.add(Text.translatable("nourish.group." + group.name).getString());
 					break;
 				}

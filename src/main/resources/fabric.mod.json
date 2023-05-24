@@ -3,10 +3,13 @@
 	"id": "nourish",
 	"version": "0.0.1-1.19.2",
 
-	"name": "Nourish",
+	"name": "Nutrition",
 	"description": "A data-driven nutrition mod",
 	"authors": [
 		"Emi"
+	],
+	"contributors": [
+		"Havio@Modrinth"
 	],
 	"contact": {
 		"homepage": "https://emi.dev/",
@@ -33,12 +36,9 @@
 	],
 
 	"depends": {
-		"fabricloader": ">=0.14.11",
+		"fabricloader": ">=0.14.19",
 		"fabric": "*",
-		"minecraft": "~1.19"
-	},
-	"suggests": {
-		"flamingo": "*"
+		"minecraft": "~1.19.4"
 	},
 	"custom": {
 		"cardinal-components": [

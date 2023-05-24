@@ -1,36 +1,28 @@
 package dev.emi.nourish;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import dev.emi.nourish.effects.NourishEffect;
 import dev.emi.nourish.effects.NourishEffect.NourishAttribute;
 import dev.emi.nourish.groups.NourishGroup;
 import dev.emi.nourish.profile.NourishProfile;
 import dev.emi.nourish.profile.NourishProfiles;
 import dev.onyxstudios.cca.api.v3.component.CopyableComponent;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.PlayerSyncCallback;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerNourishComponent implements NourishComponent, CopyableComponent<PlayerNourishComponent> {
 	public static final UUID ATTRIBUTE_UUID = UUID.fromString("C71B780A-3C67-4C76-87E0-C7504EAC1E2C");
@@ -77,7 +69,7 @@ public class PlayerNourishComponent implements NourishComponent, CopyableCompone
 		consumeFood(stack, true);
 	}
 	private void consumeFood(ItemStack stack, boolean s) {
-		Identifier id = Registry.ITEM.getId(stack.getItem());
+		Identifier id = Registries.ITEM.getId(stack.getItem());
 		if (id.toString().equals("sandwichable:sandwich")) {
 			DefaultedList<ItemStack> foods = DefaultedList.ofSize(128, ItemStack.EMPTY);
 			Inventories.readNbt(stack.getSubNbt("BlockEntityTag"), foods);
@@ -87,7 +79,7 @@ public class PlayerNourishComponent implements NourishComponent, CopyableCompone
 			}
 		} else {
 			for (NourishGroup group: profile.groups) {
-				if (stack.isIn(TagKey.of(Registry.ITEM_KEY, group.identifier))) {
+				if (stack.isIn(TagKey.of(Registries.ITEM.getKey(), group.identifier))) {
 					FoodComponent comp = stack.getItem().getFoodComponent();
 					consume(group, comp.getHunger() + comp.getSaturationModifier());
 				}
@@ -124,7 +116,7 @@ public class PlayerNourishComponent implements NourishComponent, CopyableCompone
 			if (eff.test(this)) {
 				eff.apply(player);
 				for (NourishAttribute attr : eff.attributes) {
-					newAttributes.put(Registry.ATTRIBUTE.get(attr.id),
+					newAttributes.put(Registries.ATTRIBUTE.get(attr.id),
 						new EntityAttributeModifier(ATTRIBUTE_UUID, "nourish", attr.amount, attr.operation));
 				}
 			}

@@ -13,9 +13,9 @@
 	"nourish.effect.cause.single.above_and_below": "%d powyżej %d%% i poniżej %d%%",
 	"nourish.group.fruit": "Owoce",
 	"nourish.group.vegetables": "Warzywa",
-	"nourish.group.carbohydrates": "Węglowodany",
-	"nourish.group.protein": "Białka",
+	"nourish.group.grains": "Węglowodany",
+	"nourish.group.proteins": "Białka",
 	"nourish.group.fats": "Tłuszcze",
-	"nourish.group.sweets": "Słodycze",
-	"nourish.group.description.sweets": "Zbyt dużo słodyczy ci szkodzi!"
+	"nourish.group.sugars": "Słodycze",
+	"nourish.group.description.sugars": "Zbyt dużo słodyczy ci szkodzi!"
 }

@@ -9,7 +9,6 @@
 	],
 	"client": [
 		"InventoryScreenMixin",
-		"StatusEffectUtilMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ItemStackMixin",
 		"CakeBlockMixin"

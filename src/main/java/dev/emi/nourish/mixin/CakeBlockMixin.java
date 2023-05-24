@@ -1,26 +1,21 @@
 package dev.emi.nourish.mixin;
 
 import dev.emi.nourish.NourishHolder;
-import dev.onyxstudios.cca.api.v3.entity.PlayerSyncCallback;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.registry.Registry;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import dev.emi.nourish.NourishMain;
 import dev.emi.nourish.groups.NourishGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CakeBlock.class)
 public abstract class CakeBlockMixin extends Block {
@@ -35,7 +30,7 @@ public abstract class CakeBlockMixin extends Block {
 			for (NourishGroup group: NourishHolder.NOURISH.get(player).getProfile().groups) {
 				Block block = state.getBlock();
 				ItemStack stack = block.getPickStack(world,pos,state);
-				if (stack.isIn(TagKey.of(Registry.ITEM_KEY, group.identifier))) {
+				if (stack.isIn(TagKey.of(Registries.ITEM.getKey(), group.identifier))) {
 					NourishHolder.NOURISH.get(player).consume(group, 2 + 0.1F);
 					NourishHolder.NOURISH.sync(player);
 				}
