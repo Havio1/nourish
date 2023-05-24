@@ -40,7 +40,7 @@ public class NourishScreen extends Screen {
 	private TexturedButtonWidget exitWidget;
 
 	public NourishScreen() {
-		super(Text.translatable(("nourish.gui.nourishment")).formatted(Formatting.BOLD));
+		super(Text.translatable(("nourish.gui.nutrition")));
 	}
 
 	public NourishScreen(boolean returnToInv) {
@@ -106,7 +106,7 @@ public class NourishScreen extends Screen {
 
 		for (NourishGroup group: NourishHolder.NOURISH.get(client.player).getProfile().groups) {
 			rgbValues = group.getColor();
-			alphaValue = 1.0f;
+			alphaValue = 2.0f;
 			if (group.secondary && !secondary) {
 				secondary = true;
 				Text t = Text.translatable("nourish.gui.secondary");
@@ -122,12 +122,11 @@ public class NourishScreen extends Screen {
 			this.drawTexture(matrices, x + maxNameLength + 20, y + yo + 8, 0, 8, 91, 11);
 
 			//changes shader, allowing for alpha-transparency and switches to meter texture
-			//RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderTexture(0, NOURISHMENT_METER_TEX);
 
-			//draws uncolored meter texture
-			this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
+			//unused: draws uncolored meter texture
+			//unused: this.drawTexture(matrices,x + maxNameLength + 20,y + yo + 11,0, 0, 0 + Math.round(NOURISHMENT_METER_FILL_WIDTH * comp.getValue(group) + 0.19f), 5);
 
 			//for debugging rgbValues' values:
 			//System.out.println(Arrays.toString(rgbValues) + " " + group.name + " from NourishScreen.java");
